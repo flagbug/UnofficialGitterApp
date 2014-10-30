@@ -1,10 +1,11 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
-
+using ReactiveUI;
+using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
-namespace Gitter.Droid
+namespace Gitter.Android
 {
     [Activity(Label = "Gitter", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : AndroidActivity
@@ -13,9 +14,10 @@ namespace Gitter.Droid
         {
             base.OnCreate(bundle);
 
-            Xamarin.Forms.Forms.Init(this, bundle);
+            Forms.Init(this, bundle);
 
-            SetPage(App.GetMainPage());
+            var bootstrapper = RxApp.SuspensionHost.GetAppState<AppBootstrapper>();
+            this.SetPage(bootstrapper.CreateMainPage());
         }
     }
 }
