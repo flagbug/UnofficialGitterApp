@@ -1,4 +1,5 @@
-﻿using System.Reactive.Linq;
+﻿using System;
+using System.Reactive.Linq;
 using Gitter.ViewModels;
 using ReactiveUI;
 using Xamarin.Forms;
@@ -15,14 +16,17 @@ namespace Gitter.Views
             InitializeComponent();
 
             this.WhenAnyValue(x => x.ViewModel)
+                .Subscribe(x => this.BindingContext = x);
+
+            this.WhenAnyValue(x => x.ViewModel)
                .Where(x => x != null)
                .InvokeCommand(this, x => x.ViewModel.LoadRooms);
         }
 
         object IViewFor.ViewModel
         {
-            get { return ViewModel; }
-            set { ViewModel = (RoomsViewModel)value; }
+            get { return this.ViewModel; }
+            set { this.ViewModel = (RoomsViewModel)value; }
         }
 
         public RoomsViewModel ViewModel
