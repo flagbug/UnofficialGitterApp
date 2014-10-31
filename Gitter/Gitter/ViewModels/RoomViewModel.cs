@@ -15,6 +15,11 @@ namespace Gitter.ViewModels
             this.room = room;
         }
 
+        public string Id
+        {
+            get { return this.room.id; }
+        }
+
         public string Name
         {
             get { return this.room.name; }

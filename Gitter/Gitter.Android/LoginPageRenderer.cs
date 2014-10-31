@@ -30,7 +30,7 @@ namespace Gitter.Android
                     BlobCache.Secure.SaveLogin("Gitter", eventArgs.Account.Properties["access_token"], "Gitter").Wait();
 
                     var screen = Locator.Current.GetService<IScreen>();
-                    screen.Router.Navigate.Execute(new RoomsViewModel());
+                    screen.Router.NavigateAndReset.Execute(new RoomsViewModel());
                 }
                 else
                 {

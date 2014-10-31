@@ -23,6 +23,7 @@ namespace Gitter
 
             Locator.CurrentMutable.Register(() => new LoginPage(), typeof(IViewFor<LoginViewModel>));
             Locator.CurrentMutable.Register(() => new RoomsPage(), typeof(IViewFor<RoomsViewModel>));
+            Locator.CurrentMutable.Register(() => new MessagesPage(), typeof(IViewFor<MessagesViewModel>));
 
             LoginInfo loginInfo = BlobCache.Secure.GetLoginAsync("Gitter")
                 .Catch<LoginInfo, KeyNotFoundException>(ex => Observable.Return((LoginInfo)null))

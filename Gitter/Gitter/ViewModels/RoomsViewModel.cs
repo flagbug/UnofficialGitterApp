@@ -15,14 +15,15 @@ namespace Gitter.ViewModels
 {
     public class RoomsViewModel : ReactiveObject, IRoutableViewModel
     {
+        private RoomViewModel selectedRoom;
+
         public RoomsViewModel(IScreen hostScreen = null)
         {
-            HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>();
+            this.HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>();
 
             this.Rooms = new ReactiveList<RoomViewModel>();
 
             this.LoadRooms = ReactiveCommand.CreateAsyncTask(_ => this.LoadRoomsImpl());
-
             this.LoadRooms.Subscribe(x =>
             {
                 using (this.Rooms.SuppressChangeNotifications())
@@ -31,6 +32,10 @@ namespace Gitter.ViewModels
                     this.Rooms.AddRange(x);
                 }
             });
+
+            this.WhenAnyValue(x => x.SelectedRoom)
+                .Where(x => x != null)
+                .Subscribe(x => this.HostScreen.Router.Navigate.Execute(new MessagesViewModel(x.Id)));
         }
 
         public IScreen HostScreen { get; private set; }
@@ -39,6 +44,12 @@ namespace Gitter.ViewModels
 
         public IReactiveList<RoomViewModel> Rooms { get; private set; }
 
+        public RoomViewModel SelectedRoom
+        {
+            get { return this.selectedRoom; }
+            set { this.RaiseAndSetIfChanged(ref this.selectedRoom, value); }
+        }
+
         public string UrlPathSegment
         {
             get { return "Rooms"; }
@@ -46,18 +57,18 @@ namespace Gitter.ViewModels
 
         private async Task<IEnumerable<RoomViewModel>> LoadRoomsImpl()
         {
-            var client = new HttpClient(NetCache.UserInitiated)
+            using (var client = new HttpClient(NetCache.UserInitiated))
             {
-                BaseAddress = new Uri("https://api.gitter.im/v1"),
-            };
+                client.BaseAddress = new Uri("https://api.gitter.im/v1");
 
-            var api = RestService.For<IGitterApi>(client);
+                var api = RestService.For<IGitterApi>(client);
 
-            LoginInfo loginInfo = await BlobCache.Secure.GetLoginAsync("Gitter");
+                LoginInfo loginInfo = await BlobCache.Secure.GetLoginAsync("Gitter");
 
-            IReadOnlyList<Room> rooms = await api.GetRooms("Bearer " + loginInfo.Password);
+                IReadOnlyList<Room> rooms = await api.GetRooms("Bearer " + loginInfo.Password);
 
-            return rooms.Select(room => new RoomViewModel(room));
+                return rooms.Select(room => new RoomViewModel(room));
+            }
         }
     }
 }

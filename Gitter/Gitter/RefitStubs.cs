@@ -2,8 +2,15 @@
 using System.Net.Http;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Gitter.Models;
+using ModernHttpClient;
+using Newtonsoft.Json.Linq;
 using Refit;
 
 /* ******** Hey You! *********
@@ -40,6 +47,12 @@ namespace Gitter
         {
             methodImpls = requestBuilder.InterfaceHttpMethods.ToDictionary(k => k, v => requestBuilder.BuildRestResultFuncForMethod(v));
             Client = client;
+        }
+
+        public virtual IObservable<IReadOnlyList<Message>> GetMessages(string roomId,string accessToken)
+        {
+            var arguments = new object[] { roomId,accessToken };
+            return (IObservable<IReadOnlyList<Message>>) methodImpls["GetMessages"](Client, arguments);
         }
 
         public virtual Task<IReadOnlyList<Room>> GetRooms(string accessToken)

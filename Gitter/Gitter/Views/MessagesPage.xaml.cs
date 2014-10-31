@@ -1,16 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reactive.Linq;
+using Gitter.ViewModels;
+using ReactiveUI;
+using Xamarin.Forms;
 
 namespace Gitter.Views
 {
-    public partial class MessagesPage
+    public partial class MessagesPage : ContentPage, IViewFor<MessagesViewModel>
     {
+        public static readonly BindableProperty ViewModelProperty =
+            BindableProperty.Create<MessagesPage, MessagesViewModel>(x => x.ViewModel, default(MessagesViewModel));
+
         public MessagesPage()
         {
             InitializeComponent();
+
+            this.WhenAnyValue(x => x.ViewModel)
+                .Subscribe(x => this.BindingContext = x);
+
+            this.WhenAnyValue(x => x.ViewModel)
+               .Where(x => x != null)
+               .InvokeCommand(this, x => x.ViewModel.LoadMessageStream);
+        }
+
+        object IViewFor.ViewModel
+        {
+            get { return this.ViewModel; }
+            set { this.ViewModel = (MessagesViewModel)value; }
+        }
+
+        public MessagesViewModel ViewModel
+        {
+            get { return (MessagesViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
         }
     }
 }
