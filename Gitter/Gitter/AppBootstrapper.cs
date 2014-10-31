@@ -1,4 +1,11 @@
-﻿using ReactiveUI;
+﻿using System.Collections.Generic;
+using System.Net.Http;
+using System.Reactive.Linq;
+using Akavache;
+using Gitter.ViewModels;
+using Gitter.Views;
+using ModernHttpClient;
+using ReactiveUI;
 using ReactiveUI.XamForms;
 using Splat;
 using Xamarin.Forms;
@@ -12,10 +19,24 @@ namespace Gitter
             Router = new RoutingState();
             Locator.CurrentMutable.RegisterConstant(this, typeof(IScreen));
 
-            // TODO: Register new views here, then navigate to the first page in your app
-            // Locator.CurrentMutable.Register(() => new TestView(), typeof(IViewFor<TestViewModel>));
+            Locator.CurrentMutable.RegisterLazySingleton(() => new NativeMessageHandler(), typeof(HttpMessageHandler));
 
-            //Router.Navigate.Execute(new TestViewModel(this));
+            Locator.CurrentMutable.Register(() => new LoginPage(), typeof(IViewFor<LoginViewModel>));
+            Locator.CurrentMutable.Register(() => new RoomsPage(), typeof(IViewFor<RoomsViewModel>));
+
+            LoginInfo loginInfo = BlobCache.Secure.GetLoginAsync("Gitter")
+                .Catch<LoginInfo, KeyNotFoundException>(ex => Observable.Return((LoginInfo)null))
+                .Wait();
+
+            if (loginInfo == null)
+            {
+                this.Router.Navigate.Execute(new LoginViewModel(this));
+            }
+
+            else
+            {
+                this.Router.Navigate.Execute(new RoomsViewModel(this));
+            }
         }
 
         public RoutingState Router { get; protected set; }

@@ -5,7 +5,13 @@ using ReactiveUI;
 
 namespace Gitter.Android
 {
-    [Application(Label = "Gitter")]
+    [Application(Label = "Gitter",
+#if DEBUG
+ Debuggable = true
+#else
+ Debuggable = false
+#endif
+)]
     public class AndroidApplication : Application
     {
         private AutoSuspendHelper autoSuspendHelper;
