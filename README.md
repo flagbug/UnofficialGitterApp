@@ -11,6 +11,6 @@ It will also probably only take about 10 minutes to get this running on Windows 
 - Message sending
 
 # What doesn't work?
-- Instant message receiving, it currently polls the messages every 10 seconds or after sending a message
+- Message streaming. It currently polls the messages every 10 seconds or after sending a message and resets the screen
 - The OAuth flow shortly redirects to a 404 page, just wait till the room selection is displayed
 - If there's any error anywhere, the app will blow up and crash
