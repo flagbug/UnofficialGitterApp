@@ -3,10 +3,19 @@
 					   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 					   x:Class="Gitter.Views.MessagesPage">
   <StackLayout Orientation="Vertical">
-    <ListView ItemsSource="{Binding Messages}">
+    <ListView ItemsSource="{Binding Messages}" HasUnevenRows="True">
       <ListView.ItemTemplate>
         <DataTemplate>
-          <TextCell Text="{Binding Text}" />
+          <ViewCell>
+            <StackLayout Orientation="Horizontal" Padding="5" Spacing="10">
+              <Image WidthRequest="35" HeightRequest="35" Source="{Binding ImageSource}" />
+              <StackLayout Orientation="Vertical"
+                           Spacing="5">
+                <Label Text="{Binding Sender}" Font="Small" />
+                <Label Text="{Binding Text}" Font="Medium" />
+              </StackLayout>
+            </StackLayout>
+          </ViewCell>
         </DataTemplate>
       </ListView.ItemTemplate>
     </ListView>
