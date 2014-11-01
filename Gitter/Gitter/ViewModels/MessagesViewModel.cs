@@ -33,6 +33,8 @@ namespace Gitter.ViewModels
                     // workaround till the message streaming works
                     this.SendMessage.StartWith(Unit.Default)
                     .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(10), RxApp.TaskpoolScheduler))
+                    .Select(_ => Unit.Default)
+                    .StartWith(Unit.Default)
                     .SelectMany(_ => (api ?? GitterApi.UserInitiated).GetMessages(roomId, token).Do(__ => this.Messages.Clear()).SelectMany(y => y.ToObservable()))
                 /*.Concat(this.StreamMessages(roomId, x))*/) // Something is trolling us, message streaming isn't working currently
                 .Select(x => new MessageViewModel(x))
