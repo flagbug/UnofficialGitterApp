@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Gitter.Models;
 using ModernHttpClient;
@@ -23,6 +23,9 @@ namespace Gitter
 
         [Get("/rooms")]
         Task<IReadOnlyList<Room>> GetRooms([Header("Authorization")] string accessToken);
+
+        [Post("/rooms/{id}/chatMessages")]
+        Task<Unit> SendMessage([AliasAs("id")] string roomId, [Body] SendMessage message, [Header("Authorization")] string accessToken);
     }
 
     public interface IGitterStreamingApi

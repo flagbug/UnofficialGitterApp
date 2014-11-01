@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 using System.IO;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Gitter.Models;
 using ModernHttpClient;
@@ -60,6 +60,12 @@ namespace Gitter
         {
             var arguments = new object[] { accessToken };
             return (Task<IReadOnlyList<Room>>) methodImpls["GetRooms"](Client, arguments);
+        }
+
+        public virtual Task<Unit> SendMessage(string roomId,SendMessage message,string accessToken)
+        {
+            var arguments = new object[] { roomId,message,accessToken };
+            return (Task<Unit>) methodImpls["SendMessage"](Client, arguments);
         }
 
     }
