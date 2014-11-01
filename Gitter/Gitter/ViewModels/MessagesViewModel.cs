@@ -19,11 +19,12 @@ namespace Gitter.ViewModels
     {
         private string messageText;
 
-        public MessagesViewModel(string roomId, IGitterApi api = null, IScreen hostScreen = null)
+        public MessagesViewModel(Room room, IGitterApi api = null, IScreen hostScreen = null)
         {
             this.HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>();
 
             this.Messages = new ReactiveList<MessageViewModel>();
+            this.UrlPathSegment = room.name;
 
             IObservable<string> accessToken = GitterApi.GetAccessToken().PublishLast().RefCount();
 
@@ -35,7 +36,7 @@ namespace Gitter.ViewModels
                     .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(10), RxApp.TaskpoolScheduler))
                     .Select(_ => Unit.Default)
                     .StartWith(Unit.Default)
-                    .SelectMany(_ => (api ?? GitterApi.UserInitiated).GetMessages(roomId, token).Do(__ => this.Messages.Clear()).SelectMany(y => y.ToObservable()))
+                    .SelectMany(_ => (api ?? GitterApi.UserInitiated).GetMessages(room.id, token).Do(__ => this.Messages.Clear()).SelectMany(y => y.ToObservable()))
                 /*.Concat(this.StreamMessages(roomId, x))*/) // Something is trolling us, message streaming isn't working currently
                 .Select(x => new MessageViewModel(x))
                 .Publish();
@@ -53,7 +54,7 @@ namespace Gitter.ViewModels
 
             this.SendMessage = ReactiveCommand.CreateAsyncTask(async _ =>
             {
-                await (api ?? GitterApi.UserInitiated).SendMessage(roomId, new SendMessage(this.MessageText), await accessToken);
+                await (api ?? GitterApi.UserInitiated).SendMessage(room.id, new SendMessage(this.MessageText), await accessToken);
                 this.MessageText = String.Empty;
             });
         }
@@ -72,10 +73,7 @@ namespace Gitter.ViewModels
 
         public ReactiveCommand<Unit> SendMessage { get; private set; }
 
-        public string UrlPathSegment
-        {
-            get { return "Messages"; }
-        }
+        public string UrlPathSegment { get; private set; }
 
         private IObservable<Message> StreamMessages(string roomId, string accessToken)
         {

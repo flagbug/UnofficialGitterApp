@@ -5,24 +5,24 @@ namespace Gitter.ViewModels
 {
     public class RoomViewModel
     {
-        private readonly Room room;
-
         public RoomViewModel(Room room)
         {
             if (room == null)
                 throw new ArgumentNullException("room");
 
-            this.room = room;
+            this.Room = room;
         }
 
         public string Id
         {
-            get { return this.room.id; }
+            get { return this.Room.id; }
         }
 
         public string Name
         {
-            get { return this.room.name; }
+            get { return this.Room.name; }
         }
+
+        public Room Room { get; private set; }
     }
 }
