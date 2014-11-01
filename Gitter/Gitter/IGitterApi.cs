@@ -8,6 +8,8 @@ using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Text;
 using System.Threading.Tasks;
+using Akavache;
+using Fusillade;
 using Gitter.Models;
 using ModernHttpClient;
 using Newtonsoft.Json.Linq;
@@ -31,6 +33,41 @@ namespace Gitter
     public interface IGitterStreamingApi
     {
         IObservable<Message> ObserveMessages(string roomId, string accessToken);
+    }
+
+    public class GitterApi
+    {
+        public static readonly string ApiBaseAddress = "https://api.gitter.im/v1";
+
+        private static readonly Lazy<IGitterApi> userInitiated;
+
+        static GitterApi()
+        {
+            userInitiated = new Lazy<IGitterApi>(() =>
+            {
+                var client = new HttpClient(NetCache.UserInitiated)
+                {
+                    BaseAddress = new Uri(ApiBaseAddress)
+                };
+
+                return RestService.For<IGitterApi>(client);
+            });
+        }
+
+        public static IGitterApi UserInitiated
+        {
+            get { return userInitiated.Value; }
+        }
+
+        /// <summary>
+        /// Gets the formatted access token ready o be passed directly into the REST API.
+        /// </summary>
+        /// <exception cref="KeyNotFoundException">The access token isn't stored.</exception>
+        public static IObservable<string> GetAccessToken()
+        {
+            return Observable.Defer(() => BlobCache.Secure.GetLoginAsync("Gitter"))
+                .Select(x => "Bearer " + x.Password);
+        }
     }
 
     public class GitterStreamingApi : IGitterStreamingApi

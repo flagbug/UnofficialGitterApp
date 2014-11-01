@@ -19,21 +19,21 @@ namespace Gitter.ViewModels
     {
         private string messageText;
 
-        public MessagesViewModel(string roomId, IScreen hostScreen = null)
+        public MessagesViewModel(string roomId, IGitterApi api = null, IScreen hostScreen = null)
         {
             this.HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>();
 
             this.Messages = new ReactiveList<MessageViewModel>();
 
-            IObservable<string> accessToken = BlobCache.Secure.GetLoginAsync("Gitter").Select(x => x.Password).PublishLast().RefCount();
+            IObservable<string> accessToken = GitterApi.GetAccessToken().PublishLast().RefCount();
 
-            IConnectableObservable<MessageViewModel> messageStream = Observable.Defer(() => accessToken)
+            IConnectableObservable<MessageViewModel> messageStream = accessToken
                 .SelectMany(token =>
-                    // Fetch the messages every 10 seconds or when we've sent a message 
-                    // This is a workaround till the message streaming works
+                    // Fetch the messages every 10 seconds or when we've sent a message This is a
+                    // workaround till the message streaming works
                     this.SendMessage.StartWith(Unit.Default)
-                    .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(10), RxApp.TaskpoolScheduler)) 
-                    .SelectMany(_ => this.LoadMessages(roomId, token).Do(__ => this.Messages.Clear()).SelectMany(y => y.ToObservable()))
+                    .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(10), RxApp.TaskpoolScheduler))
+                    .SelectMany(_ => (api ?? GitterApi.UserInitiated).GetMessages(roomId, token).Do(__ => this.Messages.Clear()).SelectMany(y => y.ToObservable()))
                 /*.Concat(this.StreamMessages(roomId, x))*/) // Something is trolling us, message streaming isn't working currently
                 .Select(x => new MessageViewModel(x))
                 .Publish();
@@ -51,7 +51,7 @@ namespace Gitter.ViewModels
 
             this.SendMessage = ReactiveCommand.CreateAsyncTask(async _ =>
             {
-                await this.SendMessageImpl(roomId, this.MessageText, await accessToken);
+                await (api ?? GitterApi.UserInitiated).SendMessage(roomId, new SendMessage(this.MessageText), await accessToken);
                 this.MessageText = String.Empty;
             });
         }
@@ -73,30 +73,6 @@ namespace Gitter.ViewModels
         public string UrlPathSegment
         {
             get { return "Messages"; }
-        }
-
-        private IObservable<IReadOnlyList<Message>> LoadMessages(string roomId, string accessToken)
-        {
-            var client = new HttpClient(NetCache.UserInitiated)
-            {
-                BaseAddress = new Uri("https://api.gitter.im/v1")
-            };
-
-            var api = RestService.For<IGitterApi>(client);
-
-            return api.GetMessages(roomId, "Bearer " + accessToken).Finally(() => client.Dispose());
-        }
-
-        private Task SendMessageImpl(string roomId, string text, string accessToken)
-        {
-            var client = new HttpClient(NetCache.UserInitiated)
-            {
-                BaseAddress = new Uri("https://api.gitter.im/v1")
-            };
-
-            var api = RestService.For<IGitterApi>(client);
-
-            return api.SendMessage(roomId, new SendMessage(text), "Bearer " + accessToken);
         }
 
         private IObservable<Message> StreamMessages(string roomId, string accessToken)

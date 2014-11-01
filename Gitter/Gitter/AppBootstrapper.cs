@@ -31,12 +31,12 @@ namespace Gitter
 
             if (loginInfo == null)
             {
-                this.Router.Navigate.Execute(new LoginViewModel(this));
+                this.Router.Navigate.Execute(new LoginViewModel());
             }
 
             else
             {
-                this.Router.Navigate.Execute(new RoomsViewModel(this));
+                this.Router.Navigate.Execute(new RoomsViewModel());
             }
         }
 

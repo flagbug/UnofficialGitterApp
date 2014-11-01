@@ -9,6 +9,8 @@ using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Text;
 using System.Threading.Tasks;
+using Akavache;
+using Fusillade;
 using Gitter.Models;
 using ModernHttpClient;
 using Newtonsoft.Json.Linq;

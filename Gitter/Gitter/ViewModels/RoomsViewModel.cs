@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Akavache;
-using Fusillade;
-using Gitter.Models;
 using ReactiveUI;
-using Refit;
 using Splat;
 
 namespace Gitter.ViewModels
@@ -17,13 +11,13 @@ namespace Gitter.ViewModels
     {
         private RoomViewModel selectedRoom;
 
-        public RoomsViewModel(IScreen hostScreen = null)
+        public RoomsViewModel(IGitterApi api = null, IScreen hostScreen = null)
         {
             this.HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>();
 
             this.Rooms = new ReactiveList<RoomViewModel>();
 
-            this.LoadRooms = ReactiveCommand.CreateAsyncTask(_ => this.LoadRoomsImpl());
+            this.LoadRooms = ReactiveCommand.CreateAsyncObservable(_ => LoadRoomsImpl(api ?? GitterApi.UserInitiated));
             this.LoadRooms.Subscribe(x =>
             {
                 using (this.Rooms.SuppressChangeNotifications())
@@ -55,20 +49,11 @@ namespace Gitter.ViewModels
             get { return "Rooms"; }
         }
 
-        private async Task<IEnumerable<RoomViewModel>> LoadRoomsImpl()
+        private static IObservable<IEnumerable<RoomViewModel>> LoadRoomsImpl(IGitterApi api)
         {
-            using (var client = new HttpClient(NetCache.UserInitiated))
-            {
-                client.BaseAddress = new Uri("https://api.gitter.im/v1");
-
-                var api = RestService.For<IGitterApi>(client);
-
-                LoginInfo loginInfo = await BlobCache.Secure.GetLoginAsync("Gitter");
-
-                IReadOnlyList<Room> rooms = await api.GetRooms("Bearer " + loginInfo.Password);
-
-                return rooms.Select(room => new RoomViewModel(room));
-            }
+            return GitterApi.GetAccessToken()
+                .SelectMany(api.GetRooms)
+                .Select(rooms => rooms.Select(room => new RoomViewModel(room)));
         }
     }
 }
