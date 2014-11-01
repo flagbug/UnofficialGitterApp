@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using System.IO;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;

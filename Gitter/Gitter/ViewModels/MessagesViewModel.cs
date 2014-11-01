@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -7,6 +8,7 @@ using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using Akavache;
 using Fusillade;
+using Gitter.Models;
 using ReactiveUI;
 using Refit;
 using Splat;
@@ -21,7 +23,10 @@ namespace Gitter.ViewModels
 
             this.Messages = new ReactiveList<MessageViewModel>();
 
-            IConnectableObservable<MessageViewModel> messageStream = Observable.Defer(() => this.StreamMessages(roomId))
+            IConnectableObservable<MessageViewModel> messageStream = Observable.Defer(() => BlobCache.Secure.GetLoginAsync("Gitter"))
+                .Select(x => x.Password)
+                .SelectMany(x => this.LoadMessages(roomId, x).SelectMany(y => y.ToObservable()).Concat(this.StreamMessages(roomId, x)))
+                .Select(x => new MessageViewModel(x))
                 .Publish();
 
             messageStream.Subscribe(x => this.Messages.Add(x));
@@ -47,7 +52,7 @@ namespace Gitter.ViewModels
             get { return "Messages"; }
         }
 
-        private IObservable<MessageViewModel> StreamMessages(string roomId)
+        private IObservable<IReadOnlyList<Message>> LoadMessages(string roomId, string accessToken)
         {
             var client = new HttpClient(NetCache.UserInitiated)
             {
@@ -55,13 +60,16 @@ namespace Gitter.ViewModels
             };
 
             var api = RestService.For<IGitterApi>(client);
+
+            return api.GetMessages(roomId, "Bearer " + accessToken).Finally(() => client.Dispose());
+        }
+
+        private IObservable<Message> StreamMessages(string roomId, string accessToken)
+        {
             var streamApi = new GitterStreamingApi();
 
             return BlobCache.Secure.GetLoginAsync("Gitter")
-                .SelectMany(x =>
-                    api.GetMessages(roomId, "Bearer " + x.Password).Finally(() => client.Dispose()).SelectMany(y => y.ToObservable())
-                    .Concat(streamApi.ObserveMessages(roomId, x.Password)))
-                .Select(x => new MessageViewModel(x));
+                .SelectMany(x => streamApi.ObserveMessages(roomId, accessToken));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Reactive.Linq;
@@ -35,15 +36,17 @@ namespace Gitter
         {
             string url = string.Format("https://stream.gitter.im/v1/rooms/{0}/chatMessages", roomId);
 
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-
-            return client.GetStreamAsync(url).ToObservable()
-                .Select(x => Observable.FromAsync(() => ReadLineUntil(x, '\r')).Repeat())
-                .Concat()
-                .Select(x => JObject.Parse(x).ToObject<Message>())
-                .Finally(() => client.Dispose());
+            return Observable.Using(() =>
+            {
+                var client = new HttpClient();
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                return client;
+            }, client => client.GetStreamAsync(url).ToObservable())
+            .Select(x => Observable.FromAsync(() => ReadLineUntil(x, '\r')).Repeat())
+            .Concat()
+            .Select(x => JObject.Parse(x).ToObject<Message>())
+            .Do(x => { }, ex => Debugger.Break());
         }
 
         private Task<string> ReadLineUntil(Stream stream, char delimiter)
