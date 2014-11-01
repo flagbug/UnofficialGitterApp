@@ -28,7 +28,13 @@ namespace Gitter.ViewModels
             IObservable<string> accessToken = BlobCache.Secure.GetLoginAsync("Gitter").Select(x => x.Password).PublishLast().RefCount();
 
             IConnectableObservable<MessageViewModel> messageStream = Observable.Defer(() => accessToken)
-                .SelectMany(x => this.LoadMessages(roomId, x).SelectMany(y => y.ToObservable()).Concat(this.StreamMessages(roomId, x)))
+                .SelectMany(token =>
+                    // Fetch the messages every 10 seconds or when we've sent a message 
+                    // This is a workaround till the message streaming works
+                    this.SendMessage.StartWith(Unit.Default)
+                    .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(10), RxApp.TaskpoolScheduler)) 
+                    .SelectMany(_ => this.LoadMessages(roomId, token).Do(__ => this.Messages.Clear()).SelectMany(y => y.ToObservable()))
+                /*.Concat(this.StreamMessages(roomId, x))*/) // Something is trolling us, message streaming isn't working currently
                 .Select(x => new MessageViewModel(x))
                 .Publish();
 
