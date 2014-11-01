@@ -69,7 +69,7 @@
       <HintPath>..\..\packages\Newtonsoft.Json.6.0.5\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Punchclock">
-      <HintPath>..\..\packages\Punchclock.1.1.1\lib\Portable-net45+win+wpa81+wp80\Punchclock.dll</HintPath>
+      <HintPath>..\..\packages\Punchclock.1.2.0\lib\Portable-net45+win+wpa81+wp80\Punchclock.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveUI">
       <HintPath>..\..\packages\reactiveui-core.6.1.0\lib\Portable-Net45+Win8+WP8+WPA81\ReactiveUI.dll</HintPath>
@@ -84,7 +84,7 @@
       <HintPath>..\..\packages\refit.2.0.2\lib\Portable-Net45+WinRT45+WP8+WPA81\Refit.dll</HintPath>
     </Reference>
     <Reference Include="Splat">
-      <HintPath>..\..\packages\Splat.1.5.0\lib\Portable-net45+win+wpa81+wp80\Splat.dll</HintPath>
+      <HintPath>..\..\packages\Splat.1.5.1\lib\Portable-net45+win+wpa81+wp80\Splat.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Net.Http">
