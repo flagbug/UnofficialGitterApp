@@ -10,6 +10,6 @@
         </DataTemplate>
       </ListView.ItemTemplate>
     </ListView>
-    <Entry x:Name="MessageTextEntry" Text="{Binding MessageText}" Placeholder="Type Message" />
+    <Entry x:Name="MessageTextEntry" Placeholder="Type Message" />
   </StackLayout>
 </ContentPage>
