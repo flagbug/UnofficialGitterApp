@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Reactive.Threading.Tasks;
-using System.Threading.Tasks;
 using Akavache;
-using Fusillade;
 using Gitter.Models;
 using ReactiveUI;
-using Refit;
 using Splat;
 
 namespace Gitter.ViewModels
@@ -28,40 +23,30 @@ namespace Gitter.ViewModels
 
             IObservable<string> accessToken = GitterApi.GetAccessToken().PublishLast().RefCount();
 
-            IConnectableObservable<MessageViewModel> messageStream = accessToken
-                .SelectMany(token =>
-                    // Fetch the messages every 10 seconds or when we've sent a message This is a
-                    // workaround till the message streaming works
-                    this.SendMessage.StartWith(Unit.Default)
-                    .SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(10), RxApp.TaskpoolScheduler))
-                    .Select(_ => Unit.Default)
-                    .StartWith(Unit.Default)
-                    .SelectMany(_ => (api ?? GitterApi.UserInitiated).GetMessages(room.id, token).Do(__ => this.Messages.Clear()).SelectMany(y => y.ToObservable()))
-                /*.Concat(this.StreamMessages(roomId, x))*/) // Something is trolling us, message streaming isn't working currently
-                .Select(x => new MessageViewModel(x))
-                .Publish();
-
-            messageStream.Subscribe(x => this.Messages.Add(x));
-
-            this.LoadMessageStream = ReactiveCommand.CreateAsyncTask(_ =>
-            {
-                Task firstMessage = messageStream.FirstAsync().ToTask();
-
-                messageStream.Connect();
-
-                return firstMessage;
-            });
+            this.LoadMessages = ReactiveCommand.CreateAsyncObservable(_ => accessToken.SelectMany(token => (api ?? GitterApi.UserInitiated).GetMessages(room.id, token)));
 
             this.SendMessage = ReactiveCommand.CreateAsyncTask(async _ =>
             {
                 await (api ?? GitterApi.UserInitiated).SendMessage(room.id, new SendMessage(this.MessageText), await accessToken);
                 this.MessageText = String.Empty;
             });
+
+            this.LoadMessages.FirstAsync()
+                .Concat(this.SendMessage.StartWith(Unit.Default).SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(10), RxApp.TaskpoolScheduler).Select(__ => Unit.Default)).Merge(this.SendMessage).SelectMany(__ => this.LoadMessages.ExecuteAsync()))
+                .Select(x => x.Select(y => new MessageViewModel(y)))
+                .Subscribe(x =>
+                {
+                    using (this.Messages.SuppressChangeNotifications())
+                    {
+                        this.Messages.Clear();
+                        this.Messages.AddRange(x);
+                    }
+                });
         }
 
         public IScreen HostScreen { get; private set; }
 
-        public ReactiveCommand<Unit> LoadMessageStream { get; private set; }
+        public ReactiveCommand<IReadOnlyList<Message>> LoadMessages { get; private set; }
 
         public IReactiveList<MessageViewModel> Messages { get; private set; }
 

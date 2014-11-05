@@ -20,7 +20,7 @@ namespace Gitter.Views
 
             this.WhenAnyValue(x => x.ViewModel)
                .Where(x => x != null)
-               .InvokeCommand(this, x => x.ViewModel.LoadMessageStream);
+               .InvokeCommand(this, x => x.ViewModel.LoadMessages);
 
             this.Bind(this.ViewModel, x => x.MessageText, x => x.MessageTextEntry.Text);
             this.MessageTextEntry.Events().Completed.SelectMany(_ => this.ViewModel.SendMessage.ExecuteAsync()).Subscribe();

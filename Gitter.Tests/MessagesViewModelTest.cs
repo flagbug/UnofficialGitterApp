@@ -23,7 +23,7 @@ namespace Gitter.Tests
                 var api = Substitute.For<IGitterApi>();
                 api.GetMessages(Arg.Any<string>(), Arg.Any<string>()).Returns(Observable.Return((IReadOnlyList<Message>)new List<Message>()));
                 var fixture = new MessagesViewModel(room, api, Substitute.For<IScreen>());
-                await fixture.LoadMessageStream.ExecuteAsync();
+                await fixture.LoadMessages.ExecuteAsync();
 
                 fixture.MessageText = "TheMessage";
 
@@ -40,13 +40,13 @@ namespace Gitter.Tests
                 var api = Substitute.For<IGitterApi>();
                 api.GetMessages(Arg.Any<string>(), Arg.Any<string>()).Returns(Observable.Return((IReadOnlyList<Message>)new List<Message>()));
                 var fixture = new MessagesViewModel(room, api, Substitute.For<IScreen>());
-                await fixture.LoadMessageStream.ExecuteAsync();
+                await fixture.LoadMessages.ExecuteAsync();
 
                 fixture.MessageText = "TheMessage";
 
                 await fixture.SendMessage.ExecuteAsync();
 
-                api.Received().GetMessages(room.name, "Bearer TheAccessToken");
+                api.Received(2).GetMessages(room.id, "Bearer TheAccessToken");
             }
 
             [Test]
@@ -57,13 +57,13 @@ namespace Gitter.Tests
                 var api = Substitute.For<IGitterApi>();
                 api.GetMessages(Arg.Any<string>(), Arg.Any<string>()).Returns(Observable.Return((IReadOnlyList<Message>)new List<Message>()));
                 var fixture = new MessagesViewModel(room, api, Substitute.For<IScreen>());
-                await fixture.LoadMessageStream.ExecuteAsync();
+                await fixture.LoadMessages.ExecuteAsync();
 
                 fixture.MessageText = "TheMessage";
 
                 await fixture.SendMessage.ExecuteAsync();
 
-                api.Received().SendMessage(room.id, Arg.Is<SendMessage>(x => x.Text == "TheMessage"), "Bearer TheAccessToken");
+                api.Received(1).SendMessage(room.id, Arg.Is<SendMessage>(x => x.Text == "TheMessage"), "Bearer TheAccessToken");
             }
         }
     }
