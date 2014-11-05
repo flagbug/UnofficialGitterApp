@@ -82,7 +82,7 @@
     <Compile Include="MessagesViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Gitter\Gitter\Gitter.csproj">
+    <ProjectReference Include="..\Gitter\Gitter.csproj">
       <Project>{bac77c4b-9f24-4394-a86d-f1ddffbcf7c5}</Project>
       <Name>Gitter</Name>
     </ProjectReference>

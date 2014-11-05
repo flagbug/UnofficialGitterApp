@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gitter", "Gitter\Gitter\Gitter.csproj", "{BAC77C4B-9F24-4394-A86D-F1DDFFBCF7C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gitter", "Gitter\Gitter.csproj", "{BAC77C4B-9F24-4394-A86D-F1DDFFBCF7C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gitter.Android", "Gitter\Gitter.Android\Gitter.Android.csproj", "{ED318AFB-A43C-4840-AB72-3032ED6EE576}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gitter.Android", "Gitter.Android\Gitter.Android.csproj", "{ED318AFB-A43C-4840-AB72-3032ED6EE576}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gitter.Tests", "Gitter.Tests\Gitter.Tests.csproj", "{274A9743-5C45-4EDC-A27A-D9601278D08A}"
 EndProject
@@ -70,6 +70,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Gitter\Gitter\Gitter.csproj
+		StartupItem = Gitter\Gitter.csproj
 	EndGlobalSection
 EndGlobal
