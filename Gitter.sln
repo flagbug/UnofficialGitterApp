@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
+# Visual Studio 2012
 VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gitter", "Gitter\Gitter\Gitter.csproj", "{BAC77C4B-9F24-4394-A86D-F1DDFFBCF7C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gitter.Android", "Gitter\Gitter.Android\Gitter.Android.csproj", "{ED318AFB-A43C-4840-AB72-3032ED6EE576}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gitter.Tests", "Gitter.Tests\Gitter.Tests.csproj", "{274A9743-5C45-4EDC-A27A-D9601278D08A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{274A9743-5C45-4EDC-A27A-D9601278D08A}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
+		{274A9743-5C45-4EDC-A27A-D9601278D08A}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
+		{274A9743-5C45-4EDC-A27A-D9601278D08A}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
+		{274A9743-5C45-4EDC-A27A-D9601278D08A}.AppStore|Any CPU.Build.0 = Release|Any CPU
+		{274A9743-5C45-4EDC-A27A-D9601278D08A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{274A9743-5C45-4EDC-A27A-D9601278D08A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{274A9743-5C45-4EDC-A27A-D9601278D08A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{274A9743-5C45-4EDC-A27A-D9601278D08A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BAC77C4B-9F24-4394-A86D-F1DDFFBCF7C5}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{BAC77C4B-9F24-4394-A86D-F1DDFFBCF7C5}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
 		{BAC77C4B-9F24-4394-A86D-F1DDFFBCF7C5}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -35,6 +45,9 @@ Global
 		{ED318AFB-A43C-4840-AB72-3032ED6EE576}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED318AFB-A43C-4840-AB72-3032ED6EE576}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED318AFB-A43C-4840-AB72-3032ED6EE576}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Gitter\Gitter\Gitter.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
