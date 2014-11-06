@@ -29,7 +29,11 @@ namespace Gitter.ViewModels
 
             this.WhenAnyValue(x => x.SelectedRoom)
                 .Where(x => x != null)
-                .Subscribe(x => this.HostScreen.Router.Navigate.Execute(new MessagesViewModel(x.Room)));
+                .Subscribe(x =>
+                {
+                    this.SelectedRoom = null;
+                    this.HostScreen.Router.Navigate.Execute(new MessagesViewModel(x.Room));
+                });
         }
 
         public IScreen HostScreen { get; private set; }
