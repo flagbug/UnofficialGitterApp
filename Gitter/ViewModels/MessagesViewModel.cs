@@ -32,7 +32,11 @@ namespace Gitter.ViewModels
             });
 
             this.LoadMessages.FirstAsync()
-                .Concat(this.SendMessage.StartWith(Unit.Default).SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(10), RxApp.TaskpoolScheduler).Select(__ => Unit.Default)).Merge(this.SendMessage).SelectMany(__ => this.LoadMessages.ExecuteAsync()))
+                // Fetch the messages every 10 seconds or when we've sent a message
+                //
+                // This is a workaround till the message streaming works
+                .Concat(this.SendMessage.StartWith(Unit.Default).SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(10), RxApp.TaskpoolScheduler).Select(__ => Unit.Default)).Merge(this.SendMessage)
+                    .SelectMany(__ => this.LoadMessages.ExecuteAsync()))
                 .Select(x => x.Select(y => new MessageViewModel(y)))
                 .Subscribe(x =>
                 {
