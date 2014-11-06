@@ -80,7 +80,7 @@ namespace Gitter
 
             return Observable.Using(() =>
             {
-                var client = new HttpClient();
+                var client = new HttpClient(new NativeMessageHandler());
                 client.DefaultRequestHeaders.Add("Authorization", accessToken);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 return client;
