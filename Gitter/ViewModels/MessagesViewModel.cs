@@ -25,7 +25,7 @@ namespace Gitter.ViewModels
 
             this.LoadMessages = ReactiveCommand.CreateAsyncObservable(_ => accessToken.SelectMany(token => (api ?? GitterApi.UserInitiated).GetMessages(room.id, token)));
 
-            this.SendMessage = ReactiveCommand.CreateAsyncTask(async _ =>
+            this.SendMessage = ReactiveCommand.CreateAsyncTask(this.WhenAnyValue(x => x.MessageText, x => !String.IsNullOrWhiteSpace(x)), async _ =>
             {
                 await (api ?? GitterApi.UserInitiated).SendMessage(room.id, new SendMessage(this.MessageText), await accessToken);
                 this.MessageText = String.Empty;
