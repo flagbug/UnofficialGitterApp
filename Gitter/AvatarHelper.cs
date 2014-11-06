@@ -8,12 +8,14 @@ namespace Gitter
 {
     public static class AvatarHelper
     {
+        public static readonly TimeSpan CacheDuration = TimeSpan.FromDays(1);
+
         public static IObservable<byte[]> LoadAvatar(Uri avatarSource)
         {
             if (avatarSource == null)
                 throw new ArgumentNullException("avatarSource");
 
-            return BlobCache.LocalMachine.GetOrFetchObject(avatarSource.ToString(), () => GetData(avatarSource), DateTimeOffset.Now + TimeSpan.FromDays(1));
+            return BlobCache.LocalMachine.GetOrFetchObject(avatarSource.ToString(), () => GetData(avatarSource), DateTimeOffset.Now + CacheDuration);
         }
 
         private static IObservable<byte[]> GetData(Uri requestUrl)

@@ -28,18 +28,10 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Akavache, Version=4.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\akavache.core.4.0.4\lib\net45\Akavache.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Reactive.Testing">
       <HintPath>..\packages\Rx-Testing.2.2.5\lib\net45\Microsoft.Reactive.Testing.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="NSubstitute">
       <HintPath>..\packages\NSubstitute.1.7.2.0\lib\NET45\NSubstitute.dll</HintPath>
     </Reference>
@@ -70,9 +62,14 @@
     </Reference>
     <Reference Include="System.Reactive.Windows.Threading">
       <HintPath>..\packages\Rx-XAML.2.2.5\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
+    <Reference Include="Akavache">
+      <HintPath>..\packages\akavache.core.4.0.4\lib\net45\Akavache.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -84,7 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gitter\Gitter.csproj">
-      <Project>{bac77c4b-9f24-4394-a86d-f1ddffbcf7c5}</Project>
+      <Project>{BAC77C4B-9F24-4394-A86D-F1DDFFBCF7C5}</Project>
       <Name>Gitter</Name>
     </ProjectReference>
   </ItemGroup>

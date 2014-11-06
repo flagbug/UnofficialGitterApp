@@ -7,11 +7,13 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Akavache;
 using Fusillade;
 using Gitter.Models;
 using ModernHttpClient;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Refit;
 
@@ -78,32 +80,26 @@ namespace Gitter
 
             return Observable.Using(() =>
             {
-                var client = new HttpClient(new NativeMessageHandler());
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
+                var client = new HttpClient();
+                client.DefaultRequestHeaders.Add("Authorization", accessToken);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 return client;
-            }, client => client.GetStreamAsync(url).ToObservable())
-            .Select(x => Observable.FromAsync(() => ReadLineUntil(x, '\r')).Repeat())
-            .Concat()
-            .Select(x => JObject.Parse(x).ToObject<Message>())
-            .Do(x => { }, ex => Debugger.Break());
+            }, client => client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead).ToObservable()
+                .SelectMany(x => x.Content.ReadAsStreamAsync())
+                .Select(x => Observable.FromAsync(() => ReadLine(x)).Repeat())
+                .Concat()
+                .Where(x => x != String.Empty)
+                .Select(x => JObject.Parse(x).ToObject<Message>()));
         }
 
-        private Task<string> ReadLineUntil(Stream stream, char delimiter)
+        private async Task<string> ReadLine(Stream stream)
         {
-            var stringBuilder = new StringBuilder();
-            var reader = new StreamReader(stream, Encoding.UTF8);
-
-            return Task.Run(() =>
+            using (var reader = new StreamReader(stream, Encoding.UTF8, false, 1024, true))
             {
-                char read;
-                while ((read = (char)reader.Read()) > 0 && read != delimiter)
-                {
-                    stringBuilder.Append(read);
-                }
+                string line = await reader.ReadLineAsync();
 
-                return stringBuilder.ToString();
-            });
+                return line;
+            }
         }
     }
 }

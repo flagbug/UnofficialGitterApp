@@ -36,7 +36,7 @@
   <ItemGroup>
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="AvatarHelper.cs" />
-    <Compile Include="IGitterApi.cs" />
+    <Compile Include="GitterApi.cs" />
     <Compile Include="LoginPage.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Room.cs" />

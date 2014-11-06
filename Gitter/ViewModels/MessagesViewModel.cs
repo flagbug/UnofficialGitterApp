@@ -31,20 +31,12 @@ namespace Gitter.ViewModels
                 this.MessageText = String.Empty;
             });
 
-            this.LoadMessages.FirstAsync()
-                // Fetch the messages every 10 seconds or when we've sent a message
-                //
-                // This is a workaround till the message streaming works
-                .Concat(this.SendMessage.StartWith(Unit.Default).SelectMany(_ => Observable.Interval(TimeSpan.FromSeconds(10), RxApp.TaskpoolScheduler).Select(__ => Unit.Default)).Merge(this.SendMessage)
-                    .SelectMany(__ => this.LoadMessages.ExecuteAsync()))
-                .Select(x => x.Select(y => new MessageViewModel(y)))
+            this.LoadMessages.FirstAsync().SelectMany(x => x.ToObservable())
+                .Concat(this.StreamMessages(room.id))
+                .Select(x => new MessageViewModel(x))
                 .Subscribe(x =>
                 {
-                    using (this.Messages.SuppressChangeNotifications())
-                    {
-                        this.Messages.Clear();
-                        this.Messages.AddRange(x);
-                    }
+                    this.Messages.Add(x);
                 });
         }
 
@@ -64,12 +56,12 @@ namespace Gitter.ViewModels
 
         public string UrlPathSegment { get; private set; }
 
-        private IObservable<Message> StreamMessages(string roomId, string accessToken)
+        private IObservable<Message> StreamMessages(string roomId)
         {
             var streamApi = new GitterStreamingApi();
 
-            return BlobCache.Secure.GetLoginAsync("Gitter")
-                .SelectMany(x => streamApi.ObserveMessages(roomId, accessToken));
+            return GitterApi.GetAccessToken()
+                .SelectMany(x => streamApi.ObserveMessages(roomId, x));
         }
     }
 }
