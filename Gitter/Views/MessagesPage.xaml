@@ -1,20 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
 					   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Gitter.Views;assembly=Gitter"
 					   x:Class="Gitter.Views.MessagesPage">
   <StackLayout Orientation="Vertical">
     <ListView ItemsSource="{Binding Messages}" HasUnevenRows="True">
       <ListView.ItemTemplate>
         <DataTemplate>
           <ViewCell>
-            <StackLayout Orientation="Horizontal" Padding="5" Spacing="10">
-              <Image WidthRequest="35" HeightRequest="35" Source="{Binding ImageSource}" />
-              <StackLayout Orientation="Vertical"
-                           Spacing="5">
-                <Label Text="{Binding Sender}" Font="Small" />
-                <Label Text="{Binding Text}" Font="Medium" />
-              </StackLayout>
-            </StackLayout>
+            <local:MessageView ViewModel="{Binding}" />
           </ViewCell>
         </DataTemplate>
       </ListView.ItemTemplate>

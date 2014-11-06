@@ -16,19 +16,6 @@ namespace Gitter.ViewModels
             this.message = message;
         }
 
-        public ImageSource ImageSource
-        {
-            get
-            {
-                if (this.message.fromUser != null && this.message.fromUser.avatarUrlSmall != null)
-                {
-                    return new UriImageSource { Uri = new Uri(this.message.fromUser.avatarUrlSmall) };
-                }
-
-                return null;
-            }
-        }
-
         public string Sender
         {
             get
@@ -36,6 +23,19 @@ namespace Gitter.ViewModels
                 if (this.message.fromUser != null)
                 {
                     return this.message.fromUser.username;
+                }
+
+                return null;
+            }
+        }
+
+        public Uri SenderAvatarSource
+        {
+            get
+            {
+                if (this.message.fromUser != null && this.message.fromUser.avatarUrlSmall != null)
+                {
+                    return new Uri(this.message.fromUser.avatarUrlSmall);
                 }
 
                 return null;
