@@ -57,23 +57,6 @@ namespace Gitter.Tests
             }
 
             [Test]
-            public async Task ReloadsMessages()
-            {
-                await BlobCache.Secure.SaveLogin("Gitter", "TheAccessToken", "Gitter");
-                var room = new Room { name = "TheRoom", id = "TheRoomId" };
-                var api = Substitute.For<IGitterApi>();
-                api.GetMessages(Arg.Any<string>(), Arg.Any<string>()).Returns(Observable.Return((IReadOnlyList<Message>)new List<Message>()));
-                var fixture = new MessagesViewModel(room, api, Substitute.For<IScreen>());
-                await fixture.LoadMessages.ExecuteAsync();
-
-                fixture.MessageText = "TheMessage";
-
-                await fixture.SendMessage.ExecuteAsync();
-
-                api.Received(2).GetMessages(room.id, "Bearer TheAccessToken");
-            }
-
-            [Test]
             public async Task SmokeTest()
             {
                 await BlobCache.Secure.SaveLogin("Gitter", "TheAccessToken", "Gitter");
