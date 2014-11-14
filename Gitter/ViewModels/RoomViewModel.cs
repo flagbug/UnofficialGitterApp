@@ -13,20 +13,20 @@ namespace Gitter.ViewModels
             this.Room = room;
         }
 
-		public Uri UserAvatarSource
-		{
-			get
-			{
-				if (this.Room.user != null && this.Room.user.avatarUrlSmall != null)
-				{
-					return new Uri(this.Room.user.avatarUrlSmall);
-				}
+        public Uri UserAvatarSource
+        {
+            get
+            {
+                if (this.Room.user != null && this.Room.user.avatarUrlSmall != null)
+                {
+                    return new Uri(this.Room.user.avatarUrlSmall);
+                }
 
-				return null;
-			}
-		}
+                return null;
+            }
+        }
 
-		public string Id
+        public string Id
         {
             get { return this.Room.id; }
         }
@@ -36,10 +36,10 @@ namespace Gitter.ViewModels
             get { return this.Room.name; }
         }
 
-		public string Topic
-		{
-			get { return this.Room.topic; }
-		}
+        public string Topic
+        {
+            get { return this.Room.topic; }
+        }
 
         public Room Room { get; private set; }
     }
