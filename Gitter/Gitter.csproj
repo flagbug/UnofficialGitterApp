@@ -58,6 +58,9 @@
     <Compile Include="Views\RoomsPage.xaml.cs">
       <DependentUpon>RoomsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\RoomView.cs">
+      <DependentUpon>RoomView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Akavache">
@@ -125,6 +128,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\RoomsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\RoomView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
