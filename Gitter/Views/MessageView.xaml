@@ -7,7 +7,7 @@
     <BoxView Color="Silver" HeightRequest="0.5" HorizontalOptions="FillAndExpand" />
     <StackLayout Orientation="Horizontal">
       <Image x:Name="Avatar" WidthRequest="40" HeightRequest="40" />
-      <Label TextColor="Black" Text="{Binding Sender}" Font="Medium" />
+      <Label Text="{Binding Sender}" Font="Medium" />
     </StackLayout>
     <Label TextColor="Gray" Text="{Binding Text}" Font="Medium" />
   </StackLayout>

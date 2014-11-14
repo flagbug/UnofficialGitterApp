@@ -5,7 +5,7 @@ using ReactiveUI;
 
 namespace Gitter.Android
 {
-    [Application(Label = "Gitter",
+	[Application(Label = "Gitter", Theme = "@android:style/Theme.Holo.Light",
 #if DEBUG
  Debuggable = true
 #else
