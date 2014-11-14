@@ -7,12 +7,12 @@ using System.Reactive.Linq;
 
 namespace Gitter.Views
 {
-	public partial class RoomView : ContentView, IViewFor<RoomViewModel>
+    public partial class RoomView : ContentView, IViewFor<RoomViewModel>
     {
         public static readonly BindableProperty ViewModelProperty =
-			BindableProperty.Create<RoomView, RoomViewModel>(x => x.ViewModel, default(RoomViewModel));
+            BindableProperty.Create<RoomView, RoomViewModel>(x => x.ViewModel, default(RoomViewModel));
 
-		public RoomView()
+        public RoomView()
         {
             InitializeComponent();
 
@@ -20,7 +20,7 @@ namespace Gitter.Views
                 .Where(x => x != null)
                 .Subscribe(x => this.BindingContext = x);
 
-			this.WhenAnyValue(x => x.ViewModel.UserAvatarSource)
+            this.WhenAnyValue(x => x.ViewModel.UserAvatarSource)
                 .Where(x => x != null)
                 .SelectMany(AvatarHelper.LoadAvatar)
                 .Select(x => ImageSource.FromStream(() => new MemoryStream(x)))
@@ -31,12 +31,12 @@ namespace Gitter.Views
         object IViewFor.ViewModel
         {
             get { return ViewModel; }
-			set { ViewModel = (RoomViewModel)value; }
+            set { ViewModel = (RoomViewModel)value; }
         }
 
-		public RoomViewModel ViewModel
+        public RoomViewModel ViewModel
         {
-			get { return (RoomViewModel)GetValue(ViewModelProperty); }
+            get { return (RoomViewModel)GetValue(ViewModelProperty); }
             set { SetValue(ViewModelProperty, value); }
         }
     }
