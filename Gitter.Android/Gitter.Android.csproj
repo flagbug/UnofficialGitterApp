@@ -130,6 +130,7 @@
   <ItemGroup>
     <Compile Include="AkavacheSqliteLinkerOverride.cs" />
     <Compile Include="App.cs" />
+    <Compile Include="ExtendedViewCellRenderer.cs" />
     <Compile Include="GitterAuth.cs" />
     <Compile Include="LoginPageRenderer.cs" />
     <Compile Include="MainActivity.cs" />
