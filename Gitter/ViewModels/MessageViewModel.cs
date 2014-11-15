@@ -57,7 +57,7 @@ namespace Gitter.ViewModels
                     DateTime parsed;
                     if (DateTime.TryParse(this.message.sent, out parsed))
                     {
-                        return parsed.Humanize();
+                        return parsed.Humanize(false);
                     }
                 }
                 return string.Empty;
