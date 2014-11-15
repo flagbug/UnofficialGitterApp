@@ -1,6 +1,7 @@
 ﻿using System;
 using Gitter.Models;
 using Xamarin.Forms;
+using Humanizer;
 
 namespace Gitter.ViewModels
 {
@@ -45,6 +46,22 @@ namespace Gitter.ViewModels
         public string Text
         {
             get { return this.message.text; }
+        }
+
+        public string Sent
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.message.sent))
+                {
+                    DateTime parsed;
+                    if (DateTime.TryParse(this.message.sent, out parsed))
+                    {
+                        return parsed.Humanize();
+                    }
+                }
+                return string.Empty;
+            }
         }
     }
 }
