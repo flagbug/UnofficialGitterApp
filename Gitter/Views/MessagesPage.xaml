@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:Gitter.Views;assembly=Gitter"
              x:Class="Gitter.Views.MessagesPage">
   <StackLayout Orientation="Vertical">
-    <ListView ItemsSource="{Binding Messages}" HasUnevenRows="True">
+    <ListView x:Name="MessagesListView" ItemsSource="{Binding Messages}" HasUnevenRows="True">
       <ListView.ItemTemplate>
         <DataTemplate>
           <ViewCell>
