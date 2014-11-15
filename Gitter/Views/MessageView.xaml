@@ -2,7 +2,7 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Gitter.Views.MessageView">
-  <StackLayout VerticalOptions="FillAndExpand" Orientation="Vertical" Padding="10" Spacing="10">
+  <StackLayout VerticalOptions="FillAndExpand" Orientation="Vertical" Padding="15,10,15,10">
     <!--<BoxView Color="Silver" HeightRequest="0.5" HorizontalOptions="FillAndExpand" />-->
 
     <StackLayout Orientation="Horizontal">
