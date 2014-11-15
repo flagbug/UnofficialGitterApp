@@ -8,7 +8,9 @@ using Android.Views;
 using Android.Widget;
 using Android.Graphics.Drawables;
 
-[assembly: ExportRenderer(typeof(ViewCell), typeof(Gitter.Android.Renderers.ExtendedViewCellRenderer))]
+//Disabled for now, because it doesn't really works, the ListView Divider is always shown
+//Maybe it is working in a later Xamarin.Forms release...
+//[assembly: ExportRenderer(typeof(ViewCell), typeof(Gitter.Android.Renderers.ExtendedViewCellRenderer))]
 
 namespace Gitter.Android.Renderers
 {
