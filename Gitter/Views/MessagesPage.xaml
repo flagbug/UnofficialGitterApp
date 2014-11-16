@@ -1,18 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Gitter.Views;assembly=Gitter"
-             x:Class="Gitter.Views.MessagesPage">
-  <StackLayout Orientation="Vertical">
-    <ListView x:Name="MessagesListView" ItemsSource="{Binding Messages}" HasUnevenRows="True">
-      <ListView.ItemTemplate>
-        <DataTemplate>
-          <ViewCell>
-            <local:MessageView ViewModel="{Binding}" />
-          </ViewCell>
-        </DataTemplate>
-      </ListView.ItemTemplate>
-    </ListView>
-    <Entry x:Name="MessageTextEntry" Placeholder="Type Message" />
-  </StackLayout>
-</ContentPage>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:local="clr-namespace:Gitter.Views;assembly=Gitter"
+                  x:Class="Gitter.Views.MessagesPage">
+  <MasterDetailPage.Master>
+    <!-- have to set the title property of the masters content page, otherwise
+         you will get an exception. -->
+    <ContentPage Title="User">
+      <StackLayout Orientation="Vertical" Padding="5">
+        <Label Text="User" Font="Large" HorizontalOptions="End" />
+      </StackLayout>
+    </ContentPage>
+  </MasterDetailPage.Master>
+
+  <MasterDetailPage.Detail>
+    <ContentPage>
+      <StackLayout Orientation="Vertical">
+        <ListView x:Name="MessagesListView" ItemsSource="{Binding Messages}" HasUnevenRows="True">
+          <ListView.ItemTemplate>
+            <DataTemplate>
+              <ViewCell>
+                <local:MessageView ViewModel="{Binding}" />
+              </ViewCell>
+            </DataTemplate>
+          </ListView.ItemTemplate>
+        </ListView>
+        <Entry x:Name="MessageTextEntry" Placeholder="Type Message" />
+      </StackLayout>
+    </ContentPage>
+  </MasterDetailPage.Detail>
+</MasterDetailPage>
