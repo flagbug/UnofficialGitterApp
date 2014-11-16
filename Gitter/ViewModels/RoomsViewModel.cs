@@ -57,7 +57,7 @@ namespace Gitter.ViewModels
         {
             return GitterApi.GetAccessToken()
                 .SelectMany(api.GetRooms)
-                .Select(rooms => rooms.Select(room => new RoomViewModel(room)));
+                .Select(rooms => rooms.OrderBy(room => room.name, StringComparer.CurrentCulture).Select(room => new RoomViewModel(room)));
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Gitter.ViewModels
                 .Select(x => new MessageViewModel(x))
                 .Subscribe(x =>
                 {
-                    this.Messages.Add(x);
+                    this.Messages.Insert(0, x);
                 });
         }
 

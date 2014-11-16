@@ -26,6 +26,15 @@ namespace Gitter.Views
             this.MessageTextEntry.Events().Completed
                 .Where(_ => this.ViewModel.SendMessage.CanExecute(null))
                 .SelectMany(_ => this.ViewModel.SendMessage.ExecuteAsync()).Subscribe();
+
+            this.MessagesListView.ItemSelected += (s, e) =>
+            {
+                if (e.SelectedItem == null)
+                {
+                    return; // don't do anything if we just de-selected the row
+                }
+                ((ListView)s).SelectedItem = null; // de-select the row
+            };
         }
 
         object IViewFor.ViewModel
