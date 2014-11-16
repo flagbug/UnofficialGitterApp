@@ -60,6 +60,12 @@ namespace Gitter
             return (IObservable<IReadOnlyList<Message>>) methodImpls["GetMessages"](Client, arguments);
         }
 
+        public virtual IObservable<IReadOnlyList<User>> GetRoomUsers(string roomId,string accessToken)
+        {
+            var arguments = new object[] { roomId,accessToken };
+            return (IObservable<IReadOnlyList<User>>) methodImpls["GetRoomUsers"](Client, arguments);
+        }
+
         public virtual Task<IReadOnlyList<Room>> GetRooms(string accessToken)
         {
             var arguments = new object[] { accessToken };

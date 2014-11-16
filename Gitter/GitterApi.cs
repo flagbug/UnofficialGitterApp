@@ -25,6 +25,9 @@ namespace Gitter
         [Get("/rooms/{id}/chatMessages")]
         IObservable<IReadOnlyList<Message>> GetMessages([AliasAs("id")] string roomId, [Header("Authorization")] string accessToken);
 
+        [Get("/rooms/{id}/users")]
+        IObservable<IReadOnlyList<User>> GetRoomUsers([AliasAs("id")] string roomId, [Header("Authorization")] string accessToken);
+
         [Get("/rooms")]
         Task<IReadOnlyList<Room>> GetRooms([Header("Authorization")] string accessToken);
 
