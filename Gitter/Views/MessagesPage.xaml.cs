@@ -22,6 +22,10 @@ namespace Gitter.Views
                .Where(x => x != null)
                .InvokeCommand(this, x => x.ViewModel.LoadMessages);
 
+            this.WhenAnyValue(x => x.ViewModel)
+                .Where(x => x != null)
+                .InvokeCommand(this, x => x.ViewModel.LoadUsers);
+
             this.Bind(this.ViewModel, x => x.MessageText, x => x.MessageTextEntry.Text);
             this.MessageTextEntry.Events().Completed
                 .Where(_ => this.ViewModel.SendMessage.CanExecute(null))

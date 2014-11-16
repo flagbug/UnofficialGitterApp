@@ -9,6 +9,15 @@
     <ContentPage Title="User">
       <StackLayout Orientation="Vertical" Padding="5">
         <Label Text="User" Font="Large" HorizontalOptions="End" />
+        <ListView x:Name="UsersListView" ItemsSource="{Binding Users}" HasUnevenRows="True">
+          <ListView.ItemTemplate>
+            <DataTemplate>
+              <ViewCell>
+                <local:UserView ViewModel="{Binding}" />
+              </ViewCell>
+            </DataTemplate>
+          </ListView.ItemTemplate>
+        </ListView>
       </StackLayout>
     </ContentPage>
   </MasterDetailPage.Master>
