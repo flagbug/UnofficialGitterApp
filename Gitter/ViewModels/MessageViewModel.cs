@@ -54,8 +54,17 @@ namespace Gitter.ViewModels
             {
                 if (!string.IsNullOrEmpty(this.message.sent))
                 {
+                    string sent = this.message.sent;
+
+                    // The Gitter streaming API sends a UTC time, but doesn't specify it explicilty (the normal message API does), 
+                    // we have to do that for ourselves
+                    if (!sent.EndsWith("Z"))
+                    {
+                        sent = sent + "Z";
+                    }
+
                     DateTime parsed;
-                    if (DateTime.TryParse(this.message.sent, out parsed))
+                    if (DateTime.TryParse(sent, out parsed))
                     {
                         return parsed.Humanize(false);
                     }

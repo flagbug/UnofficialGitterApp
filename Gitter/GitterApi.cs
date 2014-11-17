@@ -91,7 +91,7 @@ namespace Gitter
                 .SelectMany(x => x.Content.ReadAsStreamAsync())
                 .Select(x => Observable.FromAsync(() => ReadLine(x)).Repeat())
                 .Concat()
-                .Where(x => x != String.Empty)
+                .Where(x => !String.IsNullOrWhiteSpace(x))
                 .Select(x => JObject.Parse(x).ToObject<Message>()));
         }
 
