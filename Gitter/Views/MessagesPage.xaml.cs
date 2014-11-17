@@ -33,7 +33,7 @@ namespace Gitter.Views
 
             // We don't want messages to be selectable
             this.MessagesListView.Events().ItemSelected
-                .Where(x => x != null)
+                .Where(x => x.SelectedItem != null)
                 .Subscribe(_ => this.MessagesListView.SelectedItem = null);
         }
 
