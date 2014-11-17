@@ -1,6 +1,8 @@
-﻿namespace Gitter.Models
+﻿using System;
+
+namespace Gitter.Models
 {
-    public class Room
+    public class Room : IEquatable<Room>
     {
         public string githubType { get; set; }
 
@@ -31,5 +33,15 @@
         public int? userCount { get; set; }
 
         public int? v { get; set; }
+
+        public bool Equals(Room other)
+        {
+            return other != null && this.id == other.id;
+        }
+
+        public override int GetHashCode()
+        {
+            return new { this.id }.GetHashCode();
+        }
     }
 }

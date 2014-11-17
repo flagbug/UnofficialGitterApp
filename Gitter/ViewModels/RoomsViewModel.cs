@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using Akavache;
+using Gitter.Models;
 using ReactiveUI;
 using Splat;
 
@@ -55,9 +57,34 @@ namespace Gitter.ViewModels
 
         private static IObservable<IEnumerable<RoomViewModel>> LoadRoomsImpl(IGitterApi api)
         {
-            return GitterApi.GetAccessToken()
-                .SelectMany(api.GetRooms)
+            return BlobCache.LocalMachine.GetAndFetchLatest("rooms", () =>
+                GitterApi.GetAccessToken()
+                .SelectMany(api.GetRooms))
+                .DistinctUntilChanged(new RoomSetEqualityComparer()) // We don't want the rooms to refresh the UI twice when they haven't changed
                 .Select(rooms => rooms.OrderBy(room => room.name, StringComparer.CurrentCulture).Select(room => new RoomViewModel(room)));
+        }
+
+        private class RoomSetEqualityComparer : IEqualityComparer<IEnumerable<Room>>
+        {
+            public bool Equals(IEnumerable<Room> x, IEnumerable<Room> y)
+            {
+                return new HashSet<Room>(x).SetEquals(y);
+            }
+
+            public int GetHashCode(IEnumerable<Room> obj)
+            {
+                unchecked
+                {
+                    int hashCode = 1;
+
+                    foreach (Room room in obj)
+                    {
+                        hashCode *= room.GetHashCode();
+                    }
+
+                    return hashCode;
+                }
+            }
         }
     }
 }
