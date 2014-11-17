@@ -25,6 +25,19 @@ namespace Gitter.ViewModels
 
             this.LoadMessages = ReactiveCommand.CreateAsyncObservable(_ => accessToken.SelectMany(token => (api ?? GitterApi.UserInitiated).GetMessages(room.id, token)));
 
+            this.Users = new ReactiveList<UserViewModel>();
+            this.LoadUsers = ReactiveCommand.CreateAsyncObservable(_ => accessToken
+                .SelectMany(token => (api ?? GitterApi.UserInitiated).GetRoomUsers(room.id, token))
+                .Select(users => users.OrderBy(user => user.displayName, StringComparer.CurrentCulture).Select(user => new UserViewModel(user))));
+            this.LoadUsers.Subscribe(x =>
+            {
+                using (this.Users.SuppressChangeNotifications())
+                {
+                    this.Users.Clear();
+                    this.Users.AddRange(x);
+                }
+            });
+
             this.SendMessage = ReactiveCommand.CreateAsyncTask(this.WhenAnyValue(x => x.MessageText, x => !String.IsNullOrWhiteSpace(x)), async _ =>
             {
                 await (api ?? GitterApi.UserInitiated).SendMessage(room.id, new SendMessage(this.MessageText), await accessToken);
@@ -45,6 +58,10 @@ namespace Gitter.ViewModels
         public ReactiveCommand<IReadOnlyList<Message>> LoadMessages { get; private set; }
 
         public IReactiveList<MessageViewModel> Messages { get; private set; }
+
+        public ReactiveCommand<IEnumerable<UserViewModel>> LoadUsers { get; private set; }
+
+        public IReactiveList<UserViewModel> Users { get; private set; }
 
         public string MessageText
         {
