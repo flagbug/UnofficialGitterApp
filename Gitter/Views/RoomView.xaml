@@ -6,13 +6,11 @@
     <!--<BoxView Color="Silver" HeightRequest="0.5" HorizontalOptions="FillAndExpand" />-->
 
     <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-      <Image HorizontalOptions="Start" VerticalOptions="FillAndExpand" x:Name="Avatar" WidthRequest="40" HeightRequest="40" />
-
-      <StackLayout HorizontalOptions="StartAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
-        <Label HorizontalOptions="StartAndExpand" VerticalOptions="Start" Text="{Binding Name}" Font="Medium" />
-        <Label HorizontalOptions="StartAndExpand" VerticalOptions="Start" Text="{Binding Topic}" Font="Small" TextColor="Gray" />
-      </StackLayout>
+      <Image x:Name="Avatar" WidthRequest="40" HeightRequest="40" />
+      <Label HorizontalOptions="StartAndExpand" Text="{Binding Name}" Font="Medium" />
     </StackLayout>
 
+    <Label Text="{Binding Topic}" Font="Small" TextColor="Gray" />
+  
   </StackLayout>
 </ContentView>
