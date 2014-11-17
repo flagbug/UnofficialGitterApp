@@ -39,6 +39,11 @@ namespace Gitter.Models
             return other != null && this.id == other.id;
         }
 
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as Room);
+        }
+
         public override int GetHashCode()
         {
             return new { this.id }.GetHashCode();
