@@ -26,15 +26,23 @@ namespace Gitter.Views
                 .Where(x => x != null)
                 .InvokeCommand(this, x => x.ViewModel.LoadUsers);
 
+            //hide the master page by default
+            this.WhenAnyValue(x => x.ViewModel)
+                .Where(x => x != null)
+                .Subscribe(_ => this.IsPresented = false);
+
             this.Bind(this.ViewModel, x => x.MessageText, x => x.MessageTextEntry.Text);
             this.MessageTextEntry.Events().Completed
                 .Where(_ => this.ViewModel.SendMessage.CanExecute(null))
                 .SelectMany(_ => this.ViewModel.SendMessage.ExecuteAsync()).Subscribe();
 
-            // We don't want messages to be selectable
+            // We don't want messages and users to be selectable
             this.MessagesListView.Events().ItemSelected
                 .Where(x => x.SelectedItem != null)
                 .Subscribe(_ => this.MessagesListView.SelectedItem = null);
+            this.UsersListView.Events().ItemSelected
+                .Where(x => x.SelectedItem != null)
+                .Subscribe(_ => this.UsersListView.SelectedItem = null);
         }
 
         object IViewFor.ViewModel
