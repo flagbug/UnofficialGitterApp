@@ -6,7 +6,7 @@ using Xamarin.Forms;
 
 namespace Gitter.Views
 {
-    public partial class MessagesPage : MasterDetailPage, IViewFor<MessagesViewModel>
+    public partial class MessagesPage : CarouselPage, IViewFor<MessagesViewModel>
     {
         public static readonly BindableProperty ViewModelProperty =
             BindableProperty.Create<MessagesPage, MessagesViewModel>(x => x.ViewModel, default(MessagesViewModel));
@@ -25,11 +25,6 @@ namespace Gitter.Views
             this.WhenAnyValue(x => x.ViewModel)
                 .Where(x => x != null)
                 .InvokeCommand(this, x => x.ViewModel.LoadUsers);
-
-            //hide the master page by default
-            this.WhenAnyValue(x => x.ViewModel)
-                .Where(x => x != null)
-                .Subscribe(_ => this.IsPresented = false);
 
             this.Bind(this.ViewModel, x => x.MessageText, x => x.MessageTextEntry.Text);
             this.MessageTextEntry.Events().Completed

@@ -6,9 +6,10 @@
   <MasterDetailPage.Master>
     <!-- have to set the title property of the masters content page, otherwise
          you will get an exception. -->
-    <ContentPage Title="User">
-      <StackLayout Orientation="Vertical" Padding="5">
-        <Label Text="Rooms" Font="Large" HorizontalOptions="End" />
+    <ContentPage Title="Rooms">
+      <StackLayout Orientation="Vertical" Padding="5,0,5,5">
+        <Label Text="Rooms" Font="Large" HorizontalOptions="End" TextColor="Silver" />
+
         <ListView ItemsSource="{Binding Rooms}" HasUnevenRows="true" SelectedItem="{Binding Path=SelectedRoom, Mode=TwoWay}">
           <ListView.ItemTemplate>
             <DataTemplate>
