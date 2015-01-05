@@ -65,6 +65,7 @@ namespace Gitter.Android
 
         private GitterAuth(Uri redirectUrl, string clientSecret = null, Uri accessTokenUrl = null)
             : base(redirectUrl, redirectUrl)
+
         {
             this.clientSecret = clientSecret;
 

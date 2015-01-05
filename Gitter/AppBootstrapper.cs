@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Reactive.Linq;
+using System.Runtime.Serialization;
 using Akavache;
 using Gitter.ViewModels;
 using Gitter.Views;
@@ -14,16 +15,18 @@ namespace Gitter
 {
     public class AppBootstrapper : ReactiveObject, IScreen
     {
-        public AppBootstrapper()
+        public AppBootstrapper(bool isWinRT = false)
         {
-            Router = new RoutingState();
+            this.Router = new RoutingState();
             Locator.CurrentMutable.RegisterConstant(this, typeof(IScreen));
 
             Locator.CurrentMutable.RegisterLazySingleton(() => new NativeMessageHandler(), typeof(HttpMessageHandler));
 
-            Locator.CurrentMutable.Register(() => new LoginPage(), typeof(IViewFor<LoginViewModel>));
-            Locator.CurrentMutable.Register(() => new RoomsPage(), typeof(IViewFor<RoomsViewModel>));
-            //Locator.CurrentMutable.Register(() => new MessagesPage(), typeof(IViewFor<MessagesViewModel>));
+            if (!isWinRT)
+            {
+                Locator.CurrentMutable.Register(() => new LoginPage(), typeof(IViewFor<LoginViewModel>));
+                Locator.CurrentMutable.Register(() => new RoomsPage(), typeof(IViewFor<RoomsViewModel>));
+            }
 
             LoginInfo loginInfo = BlobCache.Secure.GetLoginAsync("Gitter")
                 .Catch<LoginInfo, KeyNotFoundException>(ex => Observable.Return((LoginInfo)null))
