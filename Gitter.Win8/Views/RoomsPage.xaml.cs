@@ -59,9 +59,9 @@ namespace Gitter.Win8.Views
                .Where(x => x != null)
                .InvokeCommand(this, x => x.ViewModel.LoadRooms);
 
-            /*
             this.WhenAnyObservable(x => x.ViewModel.SelectedRoom.Messages.Messages.Changed)
-                .Subscribe(x => this.itemDetail.ScrollToVerticalOffset(double.MaxValue));*/
+                .Select(_ => this.ViewModel.SelectedRoom.Messages.Messages.Last())
+                .Subscribe(x => this.MessagesListView.ScrollIntoView(x));
 
             this.MessageTextBox.Events().KeyUp.Where(x => x.Key == VirtualKey.Enter)
                 .Where(_ => this.ViewModel.SelectedRoom.Messages.SendMessage.CanExecute(null))
