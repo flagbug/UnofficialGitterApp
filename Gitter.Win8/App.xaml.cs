@@ -45,6 +45,7 @@ namespace Gitter.Win8
             this.Suspending += OnSuspending;
 
             Locator.CurrentMutable.Register(() => new Gitter.Win8.Views.LoginPage(), typeof(IViewFor<LoginViewModel>));
+            Locator.CurrentMutable.Register(() => new Gitter.Win8.Views.RoomsPage(), typeof(IViewFor<RoomsViewModel>));
 
             autoSuspendHelper = new AutoSuspendHelper(this);
 

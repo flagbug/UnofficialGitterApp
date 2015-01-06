@@ -47,6 +47,7 @@ namespace Gitter.ViewModels
             this.LoadMessages.FirstAsync().SelectMany(x => x.ToObservable())
                 .Concat(this.StreamMessages(room.id))
                 .Select(x => new MessageViewModel(x))
+                .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x =>
                 {
                     this.Messages.Insert(0, x);
@@ -57,12 +58,13 @@ namespace Gitter.ViewModels
 
         public ReactiveCommand<IReadOnlyList<Message>> LoadMessages { get; private set; }
 
-        public IReactiveList<MessageViewModel> Messages { get; private set; }
-
         public ReactiveCommand<IEnumerable<UserViewModel>> LoadUsers { get; private set; }
 
-        public IReactiveList<UserViewModel> Users { get; private set; }
+        public IReactiveList<MessageViewModel> Messages { get; private set; }
 
+        /// <summary>
+        /// The text the user types to send a message.
+        /// </summary>
         public string MessageText
         {
             get { return this.messageText; }
@@ -72,6 +74,8 @@ namespace Gitter.ViewModels
         public ReactiveCommand<Unit> SendMessage { get; private set; }
 
         public string UrlPathSegment { get; private set; }
+
+        public IReactiveList<UserViewModel> Users { get; private set; }
 
         private IObservable<Message> StreamMessages(string roomId)
         {
