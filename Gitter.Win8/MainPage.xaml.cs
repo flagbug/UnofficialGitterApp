@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -28,7 +29,8 @@ namespace Gitter.Win8
             this.InitializeComponent();
 
             RxApp.SuspensionHost.ObserveAppState<AppBootstrapper>()
-             .BindTo(this, x => x.DataContext);
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .BindTo(this, x => x.DataContext);
         }
     }
 }

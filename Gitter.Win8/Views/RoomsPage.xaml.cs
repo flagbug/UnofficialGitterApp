@@ -8,6 +8,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Windows.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -57,6 +58,20 @@ namespace Gitter.Win8.Views
             this.WhenAnyValue(x => x.ViewModel)
                .Where(x => x != null)
                .InvokeCommand(this, x => x.ViewModel.LoadRooms);
+
+            /*
+            this.WhenAnyObservable(x => x.ViewModel.SelectedRoom.Messages.Messages.Changed)
+                .Subscribe(x => this.itemDetail.ScrollToVerticalOffset(double.MaxValue));*/
+
+            this.MessageTextBox.Events().KeyUp.Where(x => x.Key == VirtualKey.Enter)
+                .Where(_ => this.ViewModel.SelectedRoom.Messages.SendMessage.CanExecute(null))
+                .SelectMany(_ => this.ViewModel.SelectedRoom.Messages.SendMessage.ExecuteAsync()).Subscribe();
+        }
+
+        object IViewFor.ViewModel
+        {
+            get { return ViewModel; }
+            set { ViewModel = (RoomsViewModel)value; }
         }
 
         /// <summary>
@@ -72,13 +87,6 @@ namespace Gitter.Win8.Views
             get { return (RoomsViewModel)GetValue(ViewModelProperty); }
             set { SetValue(ViewModelProperty, value); }
         }
-
-        object IViewFor.ViewModel
-        {
-            get { return ViewModel; }
-            set { ViewModel = (RoomsViewModel)value; }
-        }
-
         private async void itemListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.UsingLogicalPageNavigation())

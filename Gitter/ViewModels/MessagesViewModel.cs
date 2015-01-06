@@ -50,7 +50,7 @@ namespace Gitter.ViewModels
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x =>
                 {
-                    this.Messages.Insert(0, x);
+                    this.Messages.Add(x);
                 });
         }
 
